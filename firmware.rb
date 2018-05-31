@@ -78,12 +78,12 @@ def parse_inf(inf_path)
     end
 
     # Found start of Windows 10 drivers block
-    if line =~ /^\[Broadcom\.NTamd64\.10\.0\]/
+    if line =~ /^\[Broadcom\.NT\w*\.10\.0\]/
       in_device_block = 1
     end
     
     # Found end of Windows 10 drivers block
-    if line =~ /^\[Broadcom\.NTamd64\.6\.3\]/
+    if line =~ /^\[Broadcom\.NT\w*\.6\.3\]/
       in_device_block = 0
     end
   end
