@@ -24,7 +24,7 @@ def parse_inf(inf_path)
   device = nil
   
   if !File.exist?(inf_path)
-    puts "Error: bcbtums-win8x64-brcm.inf not found in firmware input folder."
+    puts "Error: bcbtums.inf not found in firmware input folder."
     exit
   end
 
@@ -243,7 +243,7 @@ input = File.expand_path(ARGV.shift)
 output = File.expand_path(ARGV.shift)
 
 # Parse Windows INF file into device objects
-devices = parse_inf(File.join(input, "bcbtums-win8x64-brcm.inf"))
+devices = parse_inf(File.join(input, "bcbtums.inf"))
 
 # Extract and compress all device firmwares
 create_firmwares(devices, input, output)
