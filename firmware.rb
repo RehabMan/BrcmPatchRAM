@@ -107,7 +107,7 @@ def create_firmwares(devices, input_path, output_path)
     basename = File.basename(firmware)
   
     # Validate if we have a matching firmware definition
-    device = devices.find { |d| d.firmware.casecmp(basename) == 0 }
+    device = devices.find { |d| d.firmware != nil && d.firmware.casecmp(basename) == 0 }
   
     if device  
       output_file = "#{File.basename(firmware, File.extname(firmware))}_v#{device.firmwareVersion}.zhx"
@@ -195,6 +195,11 @@ def create_plist(devices, output_path)
   xml = Document.new "<dict />"
 
   devices.sort_by{|d| [d.vendorId, d.productId]}.each do |device|
+    if device.firmware == nil
+      puts "Failed to parse firmware path for %s, skipping..." % device
+      next
+    end
+
     Element.new("key", xml.root).text = "%04x_%04x" % [ device.vendorId, device.productId ]
   
     device_xml = Element.new("dict", xml.root)
