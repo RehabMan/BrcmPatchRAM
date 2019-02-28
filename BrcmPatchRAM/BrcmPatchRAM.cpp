@@ -162,7 +162,7 @@ IOService* BrcmPatchRAM::probe(IOService *provider, SInt32 *probeScore)
 #endif
 
 // tjl (sjk) port forward.
-    IOSleep(mUpgradeDelay);
+//    IOSleep(mUpgradeDelay);
 
     clock_get_uptime(&start_time);
 
