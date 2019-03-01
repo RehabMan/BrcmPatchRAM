@@ -161,8 +161,15 @@ IOService* BrcmPatchRAM::probe(IOService *provider, SInt32 *probeScore)
     }
 #endif
 
+    UInt32 delay;
+    mUpgradeDelay = 0;
+    if (OSNumber* upgradeDelay = OSDynamicCast(OSNumber, getProperty("UpgradeDelay")))
+        mUpgradeDelay = upgradeDelay->unsigned32BitValue();
+    if (PE_parse_boot_argn("bpr_upgradedelay", &delay, sizeof delay))
+        mUpgradeDelay = delay;
+
 // tjl (sjk) port forward.
-//    IOSleep(mUpgradeDelay);
+    IOSleep(mUpgradeDelay);
 
     clock_get_uptime(&start_time);
 
@@ -198,7 +205,6 @@ IOService* BrcmPatchRAM::probe(IOService *provider, SInt32 *probeScore)
         mBlurpWait = 400;
 #endif
 
-    UInt32 delay;
     mProbeDelay = 0;
     if (OSNumber* probeDelay = OSDynamicCast(OSNumber, getProperty("ProbeDelay")))
         mProbeDelay = probeDelay->unsigned32BitValue();
@@ -222,12 +228,6 @@ IOService* BrcmPatchRAM::probe(IOService *provider, SInt32 *probeScore)
         mPreResetDelay = preResetDelay->unsigned32BitValue();
     if (PE_parse_boot_argn("bpr_preresetdelay", &delay, sizeof delay))
         mPreResetDelay = delay;
-
-    mUpgradeDelay = 0;
-    if (OSNumber* upgradeDelay = OSDynamicCast(OSNumber, getProperty("UpgradeDelay")))
-        mUpgradeDelay = upgradeDelay->unsigned32BitValue();
-    if (PE_parse_boot_argn("bpr_upgradedelay", &delay, sizeof delay))
-        mUpgradeDelay = delay;
 
     if (OSString* displayName = OSDynamicCast(OSString, getProperty(kDisplayName)))
         provider->setProperty(kUSBProductString, displayName);
