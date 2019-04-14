@@ -168,10 +168,10 @@ IOService* BrcmPatchRAM::probe(IOService *provider, SInt32 *probeScore)
     if (PE_parse_boot_argn("bpr_upgradedelay", &delay, sizeof delay))
         mUpgradeDelay = delay;
 
-// tjl (sjk) port forward.
+    clock_get_uptime(&start_time);
+    // tjl (sjk) port forward.
     IOSleep(mUpgradeDelay);
 
-    clock_get_uptime(&start_time);
 
 #ifndef NON_RESIDENT
     mWorkLock = IOLockAlloc();
@@ -488,7 +488,8 @@ void BrcmPatchRAM::uploadFirmware()
     {
         // Print out additional device information
         printDeviceInfo();
-        
+        // tjl (sjk) port forward.
+        IOSleep(2*mUpgradeDelay);       
         // Set device configuration to composite configuration index 0
         // Obtain first interface
         if (setConfiguration(0) && findInterface(&mInterface) && mInterface.open(this))
