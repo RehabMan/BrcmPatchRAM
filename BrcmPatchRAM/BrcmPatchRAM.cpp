@@ -161,7 +161,21 @@ IOService* BrcmPatchRAM::probe(IOService *provider, SInt32 *probeScore)
     }
 #endif
 
+    UInt32 delay;
+    mUpgradeDelay = 0;
+    if (OSNumber* upgradeDelay = OSDynamicCast(OSNumber, getProperty("UpgradeDelay"))) {
+        mUpgradeDelay = upgradeDelay->unsigned32BitValue();
+        AlwaysLog("[brcm (prop)-- UpgradeDelay]: %d \n", mUpgradeDelay);
+    }
+    if (PE_parse_boot_argn("bpr_upgradedelay", &delay, sizeof delay)) {
+        mUpgradeDelay = delay;
+        AlwaysLog("[brcm (args)-- UpgradeDelay]: %d \n", mUpgradeDelay);
+    }
+
     clock_get_uptime(&start_time);
+    // tjl (sjk) port forward.
+    IOSleep(mUpgradeDelay);
+
 
 #ifndef NON_RESIDENT
     mWorkLock = IOLockAlloc();
@@ -195,30 +209,43 @@ IOService* BrcmPatchRAM::probe(IOService *provider, SInt32 *probeScore)
         mBlurpWait = 400;
 #endif
 
-    UInt32 delay;
     mProbeDelay = 0;
-    if (OSNumber* probeDelay = OSDynamicCast(OSNumber, getProperty("ProbeDelay")))
+    if (OSNumber* probeDelay = OSDynamicCast(OSNumber, getProperty("ProbeDelay"))) {
         mProbeDelay = probeDelay->unsigned32BitValue();
-    if (PE_parse_boot_argn("bpr_probedelay", &delay, sizeof delay))
+        AlwaysLog("[brcm (prop)-- ProbeDelay]: %d \n", mProbeDelay);
+    }
+    if (PE_parse_boot_argn("bpr_probedelay", &delay, sizeof delay)) {
         mProbeDelay = delay;
-
+        AlwaysLog("[brcm (args)-- ProbeDelay]: %d \n", mProbeDelay);
+    }
     mInitialDelay = 100;
-    if (OSNumber* initialDelay = OSDynamicCast(OSNumber, getProperty("InitialDelay")))
+    if (OSNumber* initialDelay = OSDynamicCast(OSNumber, getProperty("InitialDelay"))) {
         mInitialDelay = initialDelay->unsigned32BitValue();
-    if (PE_parse_boot_argn("bpr_initialdelay", &delay, sizeof delay))
+        AlwaysLog("[brcm (prop)-- InitialDelay]: %d \n", mInitialDelay);      
+    }
+    if (PE_parse_boot_argn("bpr_initialdelay", &delay, sizeof delay)) {
         mInitialDelay = delay;
-
+        AlwaysLog("[brcm (args)-- InitialDelay]: %d \n", mInitialDelay);
+    }
     mPostResetDelay = 100;
-    if (OSNumber* postResetDelay = OSDynamicCast(OSNumber, getProperty("PostResetDelay")))
+    if (OSNumber* postResetDelay = OSDynamicCast(OSNumber, getProperty("PostResetDelay"))) {
         mPostResetDelay = postResetDelay->unsigned32BitValue();
-    if (PE_parse_boot_argn("bpr_postresetdelay", &delay, sizeof delay))
+        AlwaysLog("[brcm (prop)-- PostResetDelay]: %d \n", mPostResetDelay);
+    }
+    if (PE_parse_boot_argn("bpr_postresetdelay", &delay, sizeof delay)) {
         mPostResetDelay = delay;
+        AlwaysLog("[brcm (args)-- PostResetDelay]: %d \n", mPostResetDelay);
+    }
 
     mPreResetDelay = 20;
-    if (OSNumber* preResetDelay = OSDynamicCast(OSNumber, getProperty("PreResetDelay")))
+    if (OSNumber* preResetDelay = OSDynamicCast(OSNumber, getProperty("PreResetDelay"))) {
         mPreResetDelay = preResetDelay->unsigned32BitValue();
-    if (PE_parse_boot_argn("bpr_preresetdelay", &delay, sizeof delay))
+        AlwaysLog("[brcm (prop)-- PreResetDelay]: %d \n", mPreResetDelay);
+    }        
+    if (PE_parse_boot_argn("bpr_preresetdelay", &delay, sizeof delay)) {
         mPreResetDelay = delay;
+        AlwaysLog("[brcm (args)-- PreResetDelay]: %d \n", mPreResetDelay);
+    }
 
     if (OSString* displayName = OSDynamicCast(OSString, getProperty(kDisplayName)))
         provider->setProperty(kUSBProductString, displayName);
@@ -479,7 +506,8 @@ void BrcmPatchRAM::uploadFirmware()
     {
         // Print out additional device information
         printDeviceInfo();
-        
+        // tjl (sjk) port forward.
+        IOSleep(2*mUpgradeDelay);       
         // Set device configuration to composite configuration index 0
         // Obtain first interface
         if (setConfiguration(0) && findInterface(&mInterface) && mInterface.open(this))
@@ -1208,7 +1236,8 @@ bool BrcmPatchRAM::performUpgrade()
 #ifdef DEBUG
     DeviceState previousState = kUnknown;
 #endif
-
+    // tjl (sjk) port forward.
+    IOSleep(mUpgradeDelay);
     IOLockLock(mCompletionLock);
     mDeviceState = kInitialize;
 

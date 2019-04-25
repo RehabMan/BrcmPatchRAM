@@ -201,6 +201,12 @@
 			<integer>57466</integer>
 			<key>idVendor</key>
 			<integer>1161</integer>
+                        <key>UpgradeDelay</key>
+                        <integer>200</integer>
+                        <key>InitialDelay</key>
+                        <integer>400</integer>
+                        <key>PostResetDelay</key>
+                        <integer>400</integer>
 		</dict>
 		<key>0489_e087</key>
 		<dict>

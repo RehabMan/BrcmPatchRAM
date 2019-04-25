@@ -81,6 +81,7 @@ private:
     UInt32 mPreResetDelay;
     UInt32 mPostResetDelay;
     UInt32 mInitialDelay;
+    UInt32 mUpgradeDelay;
 
     USBDeviceShim mDevice;
     USBInterfaceShim mInterface;
