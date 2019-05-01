@@ -1293,7 +1293,11 @@ bool BrcmPatchRAM::performUpgrade()
 
             case kFirmwareWritten:
                 IOSleep(mPreResetDelay);
-                hciCommand(&HCI_RESET, sizeof(HCI_RESET));
+                if (hciCommand(&HCI_RESET, sizeof(HCI_RESET)) != kIOReturnSuccess){
+                    DebugLog("[Grid's mod] HCI_RESET failed, aborting.");
+                    mDeviceState = kUpdateAborted;
+                    continue;
+                }
                 break;
 
             case kResetComplete:
@@ -1321,7 +1325,7 @@ bool BrcmPatchRAM::performUpgrade()
     }
 
     IOLockUnlock(mCompletionLock);
-    OSSafeRelease(iterator);
+    OSSafeReleaseNULL(iterator);
 
     return mDeviceState == kUpdateComplete || mDeviceState == kUpdateNotNeeded;
 }
