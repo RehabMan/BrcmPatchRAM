@@ -1,3 +1,5 @@
+GridH fork: made some changes to solve a sleeping-related issue.
+
 ### BrcmPatchRAM -- RehabMan fork
 
 For the most part this fork is kept in sync with the-darkvoid's verson.  We are working together to improve the project.
