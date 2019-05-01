@@ -1171,7 +1171,7 @@
 		D4F91B071A2998CE0030D10D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CURRENT_PROJECT_VERSION = 3.0.0;
+				CURRENT_PROJECT_VERSION = 2.3.0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				SDKROOT = macosx;
@@ -1182,7 +1182,7 @@
 		D4F91B081A2998CE0030D10D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CURRENT_PROJECT_VERSION = 3.0.0;
+				CURRENT_PROJECT_VERSION = 2.3.0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				SDKROOT = macosx;
